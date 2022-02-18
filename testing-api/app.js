@@ -3,6 +3,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var mongo = require('mongodb'); 
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -21,14 +22,11 @@ const http = require('http');
 const hostname = '127.0.0.1';
 const port = 3000;
 
-const server = http.createServer((req, res) => {
-  res.statusCode = 200;
-  res.setHeader('Content-Type', 'text/plain');
-  res.end('Hello World');
-});
+const server = http.createServer(app);
 
 server.listen(port, hostname, () => {
   console.log(`Server running at http://${hostname}:${port}/`);
+  
 });
 
 app.use(cookieParser());
@@ -36,6 +34,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+
+app.get('/users', (req, res) => res.status(200).send({
+  message: 'It works.',
+}));
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
